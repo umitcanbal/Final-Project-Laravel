@@ -17,4 +17,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get("/something", "KeywordController@getTheVideos");
+// Route::get("/something", "KeywordController@getTheVideos");
