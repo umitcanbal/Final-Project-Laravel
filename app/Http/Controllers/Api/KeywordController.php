@@ -11,12 +11,27 @@ use App\Video;
 class KeywordController extends Controller
 {
     public function getTheVideos() {
-        $keyword_id = 1;
-        $keyword = Keyword::findOrFail($keyword_id);
-        $videos = $keyword->videos()->get();
+        // $keyword_id = 1;
+        // $keyword = Keyword::findOrFail($keyword_id);
+        // $videos = $keyword->videos()->get();
+        // return [
+        //     $videos,
+        //     $keyword
+        // ];
+
+        $keywords = Keyword::all();
+        $videos = [];
+        foreach($keywords as $keyword) {
+            array_push($videos, $keyword->videos()->get());
+        }
+
         return [
             $videos,
-            $keyword
+            $keywords,
         ];
     }
+
+    
+
+
 }
