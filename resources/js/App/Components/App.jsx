@@ -6,23 +6,23 @@ import Video from "./Video.jsx";
 
 export default class App extends React.Component {
 
-    constructor(props) {
-        super(props);
+    // constructor(props) {
+    //     super(props);
 
-        this.state = {
-            keywords: null,
-            videos: null,
-        }
-    }
+    //     this.state = {
+    //         keywords: null,
+    //         videos: null,
+    //     }
+    // }
 
-    componentDidMount() {
-        fetch("/api/something")
-            .then(response => (response.json()))
-            .then(data => this.setState({
-                keywords: data[1], 
-                videos: data[0]
-            }))
-    }
+    // componentDidMount() {
+    //     fetch("/api/something")
+    //         .then(response => (response.json()))
+    //         .then(data => this.setState({
+    //             keywords: data[1], 
+    //             videos: data[0]
+    //         }))
+    // }
 
     render() {
         return (

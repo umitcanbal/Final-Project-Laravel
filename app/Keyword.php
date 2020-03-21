@@ -10,6 +10,4 @@ class Keyword extends Model
         return $this->belongsToMany(Video::class, "keyword_video", "keyword_id", "video_id")->withPivot("offset_start");
     }
 
-
-    // return $this->belongsToMany('Role')->withPivot('foo', 'bar');
 }

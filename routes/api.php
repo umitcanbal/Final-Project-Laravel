@@ -19,5 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get("/something", "Api\KeywordController@getTheVideos");
+Route::get("/keywords", "Api\KeywordController@getTheKeywords");
+
+Route::get("/videos/{alias}", "Api\VideoController@getTheVideos");
 
