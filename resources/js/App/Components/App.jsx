@@ -1,5 +1,6 @@
 import React from 'react';
 
+import Layout from "./Layout/Layout.jsx";
 
 
 export default class App extends React.Component {
@@ -24,9 +25,7 @@ export default class App extends React.Component {
 
     render() {
         return (
-            <>
-                <h1>App1213lication component</h1>
-            </>
+            <Layout />
         )
     }
 }
