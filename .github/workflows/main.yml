@@ -44,6 +44,8 @@ jobs:
       run: npm ci
     - name: Build client side
       run: npm run prod
+    - name: Zip it
+      run: tar --exclude dist -czf dist/release.tar.gz .
     - name: FTP Deploy
       uses: SamKirkland/FTP-Deploy-Action@3.0.0
       with:
@@ -54,6 +56,12 @@ jobs:
         # FTP account password
         ftp-password: ${{ secrets.FTP_PASSWORD }}
         # The local folder to copy, defaults to root project folder
-        # local-dir: # optional
+        local-dir: dist
         # Passes through options into git-ftp
         # git-ftp-args: # optional
+    - name: Unzip on server
+      uses: garygrossgarten/github-action-ssh@release
+      with:
+        command: tar -xzf release.tar.gz
+        host: ${{ secrets.FTP_HOST }}
+        privateKey: ${{ secrets.SSH_KEY}}
