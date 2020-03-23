@@ -45,7 +45,9 @@ jobs:
     - name: Build client side
       run: npm run prod
     - name: Zip it
-      run: tar --exclude dist -czf dist/release.tar.gz .
+      run: |
+        mkdir dist
+        tar --exclude dist -czf dist/release.tar.gz .
     - name: FTP Deploy
       uses: SamKirkland/FTP-Deploy-Action@3.0.0
       with:
