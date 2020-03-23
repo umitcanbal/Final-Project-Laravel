@@ -1,7 +1,5 @@
 import React from 'react';
 
-import Dropdown from "./Dropdown.jsx";
-import Video from "./Video.jsx";
 
 
 export default class App extends React.Component {
@@ -27,17 +25,8 @@ export default class App extends React.Component {
     render() {
         return (
             <>
-                <h1>Application component</h1>
-
-                
+                <h1>App1213lication component</h1>
             </>
         )
-
-        // return (
-        //     <>
-        //         <Dropdown keywords={this.state.keywords}/>
-        //         <Video videos={this.state.videos}/>
-        //     </>
-        // )
     }
 }
