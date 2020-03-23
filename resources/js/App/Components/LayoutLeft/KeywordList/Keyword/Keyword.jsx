@@ -16,7 +16,7 @@ export default class Keyword extends React.Component {
           {this.props.keywordList.map( keyword => {
             return (
             <div key={keyword.id}>
-              <Link to={`/video/${keyword.alias}`}>              
+              <Link to={`/videos/${keyword.alias}`}>              
                 {keyword.name}
               </Link>
             </div>
