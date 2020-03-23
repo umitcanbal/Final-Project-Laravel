@@ -40,7 +40,8 @@ jobs:
       run: php artisan key:generate
     - name: Verify
       run: |
-        cat .env
-        ls -la vendors
+        ls -la vendor
     - name: NPM ci
       run: npm ci
+    - name: Build client side
+      run: npm run prod
