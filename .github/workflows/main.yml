@@ -39,9 +39,21 @@ jobs:
     - name: Generate key
       run: php artisan key:generate
     - name: Verify
-      run: |
-        ls -la vendor
+      run: ls -la vendor
     - name: NPM ci
       run: npm ci
     - name: Build client side
       run: npm run prod
+    - name: FTP Deploy
+      uses: SamKirkland/FTP-Deploy-Action@3.0.0
+      with:
+        # Deployment destination server & path. Formatted as protocol://domain.com:port/full/destination/path/
+        ftp-server: ftp://${{ secrets.FTP_HOST }}:21/
+        # FTP account username
+        ftp-username: ${{ secrets.FTP_USERNAME }}
+        # FTP account password
+        ftp-password: ${{ secrets.FTP_PASSWORD }}
+        # The local folder to copy, defaults to root project folder
+        # local-dir: # optional
+        # Passes through options into git-ftp
+        # git-ftp-args: # optional
