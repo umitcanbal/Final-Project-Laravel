@@ -26,7 +26,7 @@ export default class KeywordList extends React.Component {
         {
           keywordList.length > 0 
           &&
-          <Keyword keywordList={keywordList}/>
+          <Keyword keywordList={keywordList} isVideoPageOn={this.props.isVideoPageOn}/>
         }
       </div>
     )

@@ -5,10 +5,6 @@ import Header from "../Header/Header.jsx";
 import LayoutLeft from "../LayoutLeft/LayoutLeft.jsx";
 import LayoutRight from "../LayoutRight/LayoutRight.jsx";
 
-// import Introduction from "./Introduction/Introduction.jsx";
-// import VideoPage from "./VideoPage/Videopage.jsx";
-// import { Switch, Route } from "react-router-dom";
-
 
 export default class Layout extends React.Component {
   constructor(props) {
@@ -22,7 +18,7 @@ export default class Layout extends React.Component {
   }
 
   componentWillMount() {
-    if(this.state.width <= 900) {
+    if(this.state.width < 900) {
       this.setState( { desktop: false } )
     }
   }
@@ -36,47 +32,34 @@ export default class Layout extends React.Component {
   }
 
   render() {
-  //   return(
-  //     <>
-  //       <Header />
-  //       <div className="layout-sides">
-  //         <LayoutLeft />
-  //         <LayoutRight>
-  //           <Switch>
-  //             <Route exact path="/" component={Introduction} />
-  //             <Route exact path="/videos/:alias" component={VideoPage} />
-  //           </Switch>
-  //         <LayoutRight />
-  //       </div>
-  //     </>
-  //   )
-  // }
 
-    if(this.state.desktop === true) {
+    if(this.state.desktop) {
+
       return(
-        <>
+        <div>
           <Header />
           <div className="layout-sides">
             <LayoutLeft />
             <LayoutRight />
           </div>
-        </>
+        </div>
       )
     } else {
 
       if(this.state.videoPageOn === false) {
         return(
-          <>
+          <div>
             <Header />
-            <LayoutLeft />
-          </>
+            <LayoutLeft isVideoPageOn={this.isVideoPageOn}/>
+          </div>
         )
       } else {
+
         return(
-          <>
-            <Header changeThePage={this.isVideoPageOn} videoPageOn={this.state.videoPageOn} />
+          <div>
+            <Header videoPageOn={this.state.videoPageOn} isVideoPageOn={this.isVideoPageOn}/>
             <LayoutRight />
-          </>
+          </div>
         )
       }
     }

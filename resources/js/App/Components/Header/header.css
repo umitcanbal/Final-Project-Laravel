@@ -1,7 +1,6 @@
 .header {
   border: 1px green solid;
   display: flex;
-  justify-content: flex-end;
 }
 
 .header-text {
