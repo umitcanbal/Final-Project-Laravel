@@ -49,21 +49,15 @@ jobs:
         mkdir dist
         tar --exclude dist -czf dist/release.tar.gz .
     - name: FTP Deploy
-      uses: SamKirkland/FTP-Deploy-Action@3.0.0
+      uses: sebastianpopp/ftp-action@releases/v2
       with:
-        # Deployment destination server & path. Formatted as protocol://domain.com:port/full/destination/path/
-        ftp-server: ftp://${{ secrets.FTP_HOST }}:21/
-        # FTP account username
-        ftp-username: ${{ secrets.FTP_USERNAME }}
-        # FTP account password
-        ftp-password: ${{ secrets.FTP_PASSWORD }}
-        # The local folder to copy, defaults to root project folder
-        local-dir: dist
-        # Passes through options into git-ftp
-        # git-ftp-args: # optional
-    - name: Unzip on server
-      uses: garygrossgarten/github-action-ssh@release
-      with:
-        command: tar -xzf release.tar.gz
         host: ${{ secrets.FTP_HOST }}
-        privateKey: ${{ secrets.SSH_KEY}}
+        user: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        localDir: "dist"
+#     - name: Unzip on server
+#       uses: garygrossgarten/github-action-ssh@release
+#       with:
+#         command: tar -xzf release.tar.gz
+#         host: ${{ secrets.FTP_HOST }}
+#         privateKey: ${{ secrets.SSH_KEY}}
