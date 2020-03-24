@@ -18,7 +18,6 @@ export default class VideoPage extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.match.params.alias !== prevProps.match.params.alias) {
-      console.log("updated");
       fetch(`/api/videos/${this.props.match.params.alias}`)
         .then( response => (response.json()) )
         .then( data => { this.setState( { videos: data } ) })
@@ -35,7 +34,7 @@ export default class VideoPage extends React.Component {
           <div>
             <div>URLs of the videos matching with this keyword that has id: "{this.state.videos[0].pivot.keyword_id}" are listed  below;
               <ul>
-                {this.state.videos.map( video => { return( <li>{video.URL}</li> ) } )}
+                {this.state.videos.map( (video, index) => { return( <li key={index}>{video.URL}</li> ) } )}
               </ul>
             </div>
           </div>
