@@ -12,7 +12,7 @@ export default class LayoutRight extends React.Component {
         <p>Writing from LayoutRight</p>
         <Switch>
           <Route exact path="/" component={Introduction} />
-          <Route exact path="/videos/:alias" render={(props) => (<VideoPage keywordList={this.props.keywordList} {...props}/>) }/>
+          <Route exact path="/videos/:alias" render={(props) => (<VideoPage keywordList={this.props.keywordList} {...props} />) }/>
         </Switch>
       </div>
     )
