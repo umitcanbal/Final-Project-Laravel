@@ -4,22 +4,9 @@ import "./keywordlist.css";
 import Keyword from "./Keyword/Keyword.jsx";
 
 export default class KeywordList extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      keywordList: [],
-    }
-  }
-
-  componentDidMount() {
-    fetch("api/keywords")
-      .then( (response) => { return (response.json()) } )
-      .then( (data) => { this.setState( { keywordList: data } ) } )
-  }
 
   render() {
-    const { keywordList } = this.state;
+    const { keywordList } = this.props;
     return(
       <div className="keywordlist">
         <p>Writing from KeywordList</p>

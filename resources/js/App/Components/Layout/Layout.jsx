@@ -14,10 +14,17 @@ export default class Layout extends React.Component {
       desktop: true,
       width: window.innerWidth,
       videoPageOn: false,
+      keywordList: []
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
+    fetch("api/keywords")
+      .then( (response) => { return (response.json()) } )
+      .then( (data) => {
+        console.log('data', data)
+         this.setState( { keywordList: data } ) } )
+  
     if(this.state.width < 900) {
       this.setState( { desktop: false } )
     }
@@ -39,8 +46,8 @@ export default class Layout extends React.Component {
         <div>
           <Header />
           <div className="layout-sides">
-            <LayoutLeft />
-            <LayoutRight />
+            <LayoutLeft keywordList={this.state.keywordList} />
+            <LayoutRight keywordList={this.state.keywordList}  />
           </div>
         </div>
       )
@@ -50,7 +57,7 @@ export default class Layout extends React.Component {
         return(
           <div>
             <Header />
-            <LayoutLeft isVideoPageOn={this.isVideoPageOn}/>
+            <LayoutLeft keywordList={this.state.keywordList} isVideoPageOn={this.isVideoPageOn}/>
           </div>
         )
       } else {

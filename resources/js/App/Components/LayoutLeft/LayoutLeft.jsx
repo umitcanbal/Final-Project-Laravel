@@ -8,7 +8,7 @@ export default class LayoutLeft extends React.Component {
     return(
       <div className="layoutleft">
         <p>Writing from LayoutLeft</p>
-        <KeywordList isVideoPageOn={this.props.isVideoPageOn}/>
+        <KeywordList keywordList={this.props.keywordList} isVideoPageOn={this.props.isVideoPageOn}/>
       </div>
     )
   }

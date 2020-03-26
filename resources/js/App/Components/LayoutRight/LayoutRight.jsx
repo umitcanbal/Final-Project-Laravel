@@ -7,12 +7,12 @@ import { Switch, Route } from "react-router-dom";
 
 export default class LayoutRight extends React.Component {
   render() {
-    return(
+    return (
       <div className="layoutright">
         <p>Writing from LayoutRight</p>
         <Switch>
           <Route exact path="/" component={Introduction} />
-          <Route exact path="/videos/:alias" component={VideoPage} />
+          <Route exact path="/videos/:alias" render={(props) => (<VideoPage keywordList={this.props.keywordList} {...props}/>) }/>
         </Switch>
       </div>
     )
