@@ -22,7 +22,7 @@ function deleteFilesThenSelf($folder, $exclude) {
 }
 
 // First remove all files except the release archive
-deleteFilesThenSelf(realpath(__DIR__ . '/..'), ['release.tar.gz']);
+deleteFilesThenSelf(realpath(__DIR__ . '/..'), ['release.tar.gz', 'install.php']);
 
 try {
     $p = new PharData(__DIR__ . '/release.tar.gz');
@@ -31,7 +31,7 @@ try {
     $p = new PharData(__DIR__ . '/release.tar');
     $p->extractTo(__DIR__);
 } catch (Exception $e) {
-    echo "Failed to unzip file: {$e.message}";
+    echo "Failed to unzip file: {$e->getMessage()}";
 }
 
 echo "Installation completed";

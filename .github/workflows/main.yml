@@ -65,4 +65,4 @@ jobs:
         localDir: "dist"
         remoteDir: "public"
     - name: Trigger installation
-      run: wget http://english-with-friends/install.php
+      run: wget http://english-with-friends.fun/install.php
