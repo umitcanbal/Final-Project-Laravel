@@ -1,7 +1,7 @@
 import React from "react";
 import "./keywordlist.css";
 
-import Keyword from "./Keyword/Keyword.jsx";
+import Keyword from "../Keyword/Keyword.jsx";
 
 export default class KeywordList extends React.Component {
 

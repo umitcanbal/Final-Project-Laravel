@@ -1,8 +1,8 @@
 import React from "react";
 import "./layoutright.css";
 
-import Introduction from "./Introduction/Introduction.jsx";
-import VideoPage from "./VideoPage/Videopage.jsx";
+import Introduction from "../Introduction/Introduction.jsx";
+import VideoPage from "../VideoPage/Videopage.jsx";
 import { Switch, Route } from "react-router-dom";
 
 export default class LayoutRight extends React.Component {

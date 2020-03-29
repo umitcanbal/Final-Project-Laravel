@@ -1,6 +1,5 @@
 import React from "react";
 import "./keyword.css";
-// import {ReactContext} from "../../../Layout/Layout.jsx";
 
 import { Link } from "react-router-dom";
 
