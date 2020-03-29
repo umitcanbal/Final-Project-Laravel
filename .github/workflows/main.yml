@@ -64,5 +64,5 @@ jobs:
         password: ${{ secrets.FTP_PASSWORD }}
         localDir: "dist"
         remoteDir: "public"
-    - name: Trigger installation
-      run: wget http://english-with-friends.fun/install.php
+#    - name: Trigger installation
+#      run: wget http://english-with-friends.fun/install.php
