@@ -8,66 +8,101 @@ export default class VideoPage extends React.Component {
 
     this.state = {
       currentVideo: 0,
+      nextButton: false,
     }
   }
 
   async componentDidMount() {
     const { keywordList } = this.props;
-    const { videos } = keywordList.find((word) => {
+    const { videos } = await keywordList.find((word) => {
       return (word.alias === this.props.match.params.alias)
     });
     this.setVideoPlayer(videos[this.state.currentVideo])
   }
+
   componentDidUpdate(prevProps) {
     if (this.props.match.params.alias !== prevProps.match.params.alias) {
       { this.setState({ currentVideo: 0, changed: true }) }
     }
   }
 
-  nextVideo = () => {
-    this.setState({ currentVideo: this.state.currentVideo + 1, changed: false })
+  async nextVideo() {
+    await this.setState({ currentVideo: this.state.currentVideo + 1, nextButton: true });
+    const { keywordList } = this.props;
+    const { videos } = await keywordList.find((word) => {
+      return (word.alias === this.props.match.params.alias)
+    });
+    
+    // player.destroy();
+    
+    setTimeout(() => {
+      this.setVideoPlayer(videos[this.state.currentVideo]);
+    }, 500);
+    
   }
 
   setVideoPlayer = async (currentVideo) => {
+    console.log("tekrardan video player")
     const url = currentVideo ? currentVideo.URL : ""
-
+  
     const offsetStart = getOffsetStart(currentVideo)
-    const offsetFinish = offsetStart + 5
+    const offsetFinish = offsetStart + 10
 
     const parameters = {
+      
       cc_load_policy: 1,
       cc_lang_pref: 'en',
       start: offsetStart,
       end: offsetFinish,
       rel: 0,
     }
+    
+    await this.setState({nextButton: false});
 
-    const player = await window.getYoutubePlayer(url, parameters)
 
-    player.playVideo()
+    player = await window.getYoutubePlayer(url, parameters);
+    
+    
+    // console.log(player);
+    player.playVideo();
+    
+    
 
-    setInterval(() => { // TODO Clear all intervals when necessary! (component unmounting, switching to another video)
+    const timeDetector = setInterval(() => { // TODO Clear all intervals when necessary! (component unmounting, switching to another video)
       this.setState({
         currentVideoTime: player.getCurrentTime()
       })
-    }, 1000)
-    function onPlayerStateChange() {
-      if('state is stopped') clearIn
-    }
+
+      if(this.state.nextButton) {
+        console.log("next butonunun içindeyim")
+        // player.parentNode.removeChild(player)
+        // window.removeChild(player);
+        player.destroy(player);
+        // console.log(player);
+        clearInterval(timeDetector);
+        console.log("next butonuna bastığın için videoyu durdurdum");
+      }
+    }, 500)
+
+    // function onPlayerStateChange() {
+    //   if('state is stopped') clearIn
+    // }
   }
+
   render() {
-    const { keywordList } = this.props;
-    const { videos } = keywordList.find((word) => {
-      return (word.alias === this.props.match.params.alias)
-    });
-    const { currentVideoTime } = this.state
-    console.log('current', currentVideoTime)
+    // const { keywordList } = this.props;
+    // const { videos } = keywordList.find((word) => {
+    //   return (word.alias === this.props.match.params.alias)
+    // });
+    console.log(this.state);
+    // const { currentVideoTime } = this.state
+    // console.log('current', currentVideoTime)
     return (
       <div>
         {this.state.changed && this.state.currentVideo != 0 ? <div>loading</div> :
           <div>
             <div id='player'></div>
-            <button onClick={this.nextVideo}>Next</button>
+            <button onClick={this.nextVideo.bind(this)}>Next</button>
             <p style={{ fontWeight: 'bold' }}>My Text</p>
           </div>}
       </div>
