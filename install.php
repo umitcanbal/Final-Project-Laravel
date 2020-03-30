@@ -1,37 +1,52 @@
 <?php
 
-// $exclude works only on the first level, that's fine for this script
-function deleteFilesThenSelf($folder, $exclude) {
+$www = realpath(__DIR__ . '/..');
+$public = __DIR__;
+$releaseZip = realpath($www . '/release.zip');
+
+echo "WWW path is $www<br/>";
+echo "public path is $public<br/>";
+echo "archive path is $releaseZip<br/>";
+
+function deleteFiles($folder, $removeSelf, $releaseZip) {
     $iterator = new DirectoryIterator($folder);
 
+    echo "Clearing $folder<br/>";
+
     foreach ($iterator as $f) {
-        if ($f->isDot())
+        $filePath = $f->getPathname();
+
+        if ($f->isDot() || $filePath === $releaseZip)
             continue; // skip . and ..
 
         if ($f->isFile()) {
-            if (in_array($exclude, $f->getFilename()))
-                continue;
+            echo "TEST: $filePath === $releaseZip<br/>";
+            echo "Removing file {$filePath}<br />";
 
-            unlink($f->getPathname());
+            unlink($filePath);
         } elseif ($f->isDir()) {
-            deleteFilesThenSelf($f->getPathname(), $exclude);
+            deleteFiles($f->getPathname(), true, $releaseZip);
         }
     }
 
-    rmdir($folder);
+    if ($removeSelf) {
+        rmdir($folder);
+    }
 }
 
 // First remove all files except the release archive
-deleteFilesThenSelf(realpath(__DIR__ . '/..'), ['release.tar.gz', 'install.php']);
+deleteFiles($www, false, $releaseZip);
 
-try {
-    $p = new PharData(__DIR__ . '/release.tar.gz');
-    $p->decompress();
+$zip = new ZipArchive;
+$res = $zip->open($releaseZip);
 
-    $p = new PharData(__DIR__ . '/release.tar');
-    $p->extractTo(__DIR__);
-} catch (Exception $e) {
-    echo "Failed to unzip file: {$e->getMessage()}";
+if ($res === true) {
+	$zip->extractTo($www);
+	$zip->close();
+
+	unlink($releaseZip);
+} else {
+	throw new Error('Cannot open archive: ' . $res);
 }
 
 echo "Installation completed";

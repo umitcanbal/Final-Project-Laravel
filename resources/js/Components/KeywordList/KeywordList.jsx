@@ -7,7 +7,7 @@ export default class KeywordList extends React.Component {
   state = {keywords: [], error: false};
 
   componentDidMount() {
-    fetch("api/keywords")
+    fetch("/api/keywords")
       .then(response => response.json())
       .then(data => this.setState({keywords: data}))
       .catch(() => this.setState({error: true}));

@@ -44,7 +44,9 @@ jobs:
     - name: Zip it
       run: |
         mkdir dist
-        tar --exclude dist --exclude node_modules --exclude .git --exclude tests -czf dist/release.tar.gz .
+        mkdir dist/public
+        mv install.php dist/public/install.php
+        zip -r dist/release.zip . -x dist/\* node_modules/\* .git/\*
     - name: Upload zip to server
       uses: sebastianpopp/ftp-action@releases/v2
       with:
@@ -52,17 +54,5 @@ jobs:
         user: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
         localDir: "dist"
-    - name: Prepare installation file
-      run: |
-        rm dist/release.tar.gz
-        cp install.php dist/install.php
-    - name: Upload installation file
-      uses: sebastianpopp/ftp-action@releases/v2
-      with:
-        host: ${{ secrets.FTP_HOST }}
-        user: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        localDir: "dist"
-        remoteDir: "public"
-#    - name: Trigger installation
-#      run: wget http://english-with-friends.fun/install.php
+    - name: Trigger installation
+      run: wget -qO- http://english-with-friends.fun/install.php
