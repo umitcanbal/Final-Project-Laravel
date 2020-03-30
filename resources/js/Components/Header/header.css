@@ -1,0 +1,66 @@
+.header {
+  color: white;
+  font-family: var(--friends-font);
+  height: 60px;
+  box-shadow: 0px 3px 6px 0px var(--border-color);
+  background-color: var(--friends-blue);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header__text {
+  font-size: 1.2rem;
+}
+
+.header__btn-left,
+.header__btn-right {
+  background: none;
+  border: none;
+  outline: none;
+  margin: 0 1rem;
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+  cursor: initial;
+}
+
+.header__btn-left.header__btn-left--shown,
+.header__btn-right.header__btn-right--shown {
+  opacity: 1;
+  pointer-events: all;
+  cursor: pointer;
+}
+
+.header__btn-left:after,
+.header__btn-right:after {
+  color: white;
+  content: url(./chevron.svg);
+  width: 1rem;
+  height: 1rem;
+  display: block;
+}
+
+.header__btn-left:after {
+  transform: rotate(180deg);
+}
+
+@media(min-width:900px) {
+  .header__text {
+    font-size: 1.4rem;
+  }
+
+  .header__btn-left,
+  .header__btn-right {
+    opacity: 0;
+    pointer-events: none;
+    cursor: pointer;
+  }
+
+  .header__btn-left.header__btn-left--shown,
+  .header__btn-right.header__btn-right--shown {
+    opacity: 0;
+    pointer-events: none;
+    cursor: pointer;
+  }
+}

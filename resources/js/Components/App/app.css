@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css?family=Patrick+Hand&display=swap');
+@font-face {
+    font-family: "Friends";
+    src: url("./gabrwffr-webfont.woff") format("woff"),
+        url("./gabrwffr-webfont.woff2") format("woff2");
+}
+
+html, body, #app {
+    height: 100%;
+}
+
+html {
+    color: var(--text-color);
+}
+:root {
+    --friends-blue: #24B3ED;
+    --friends-red: #F15A24 ;
+    --friends-yellow: #F2C84F;
+    --list-hover: #F8E19E;
+    --list-selected-hover: #ED4205;
+    --text-color: #505050;
+    --border-color: #707070;
+    --friends-font: 'Friends', cursive;
+    --body-font: 'Patrick Hand', cursive;
+}
+
+body {
+    margin: 0;
+    box-sizing: border-box;
+    font-family: var(--body-font);
+}
