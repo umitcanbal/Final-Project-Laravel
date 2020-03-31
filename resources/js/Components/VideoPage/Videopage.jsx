@@ -21,11 +21,11 @@ export default class VideoPage extends React.Component {
     // var obj = JSON.parse('{"start_time":"00:09:31,583","end_time":"00:09:35,747","text":"There\'s a nuclear holocaust.\nl\'m the last man on earth."}');
     // console.log(obj);
 
-    
 
-    const { keywordList } = this.props;
+
+    const { keywordList, alias } = this.props;
     const { videos } = await keywordList.find((word) => {
-      return (word.alias === this.props.match.params.alias)
+      return (word.alias === alias)
     });
     this.setVideoPlayer(videos[this.state.currentVideo])
 
@@ -33,12 +33,12 @@ export default class VideoPage extends React.Component {
   }
 
   async componentDidUpdate(prevProps) {
-    if (this.props.match.params.alias !== prevProps.match.params.alias) {
+    if (this.props.alias !== prevProps.alias) {
     await this.setState({ currentVideo: 0, changed: true });
 
-      const { keywordList } = this.props;
+      const { keywordList, alias } = this.props;
       const { videos } = await keywordList.find((word) => {
-        return (word.alias === this.props.match.params.alias)
+        return (word.alias === alias)
       });
 
       console.log("this.props", this.props);
@@ -55,9 +55,9 @@ export default class VideoPage extends React.Component {
 
   async nextVideo() {
     await this.setState({ currentVideo: this.state.currentVideo + 1, nextButton: true });
-    const { keywordList } = this.props;
+    const { keywordList, alias } = this.props;
     const { videos } = await keywordList.find((word) => {
-      return (word.alias === this.props.match.params.alias)
+      return (word.alias === alias)
     });
 
     setTimeout(() => {
@@ -67,7 +67,7 @@ export default class VideoPage extends React.Component {
 
   setVideoPlayer = async (currentVideo) => {
     const url = currentVideo ? currentVideo.URL : ""
-  
+
     const offsetStart = getOffsetStart(currentVideo)
     const offsetFinish = offsetStart + 10
 
@@ -122,7 +122,7 @@ export default class VideoPage extends React.Component {
     subtitlesForTheSpecificVideo.map( (subtitle) => {
       if(this.state.currentVideoTime >= subtitle.start && this.state.currentVideoTime <= subtitle.end) {
         text = subtitle.text;
-      }       
+      }
     })
 
     return (
