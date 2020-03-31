@@ -18,13 +18,18 @@ export default class VideoPage extends React.Component {
 
 // let exampleDecoded = JSON.parse(exampleJSON);
 // console.log(JSON.parse('{ "start_time":"00:09:31,583", "end_time":"00:09:35,747", "text":"There\'s a nuclear holocaust"}'));,
-var obj = JSON.parse('{ "start_time":"00:09:31,583", "end_time":"00:09:35,747", "text":"There\'s a nuclear holocaust"}');
-console.log(obj);
+    // var obj = JSON.parse('{"start_time":"00:09:31,583","end_time":"00:09:35,747","text":"There\'s a nuclear holocaust.\nl\'m the last man on earth."}');
+    // console.log(obj);
+
+    
+
     const { keywordList } = this.props;
     const { videos } = await keywordList.find((word) => {
       return (word.alias === this.props.match.params.alias)
     });
     this.setVideoPlayer(videos[this.state.currentVideo])
+
+
   }
 
   async componentDidUpdate(prevProps) {
@@ -35,6 +40,11 @@ console.log(obj);
       const { videos } = await keywordList.find((word) => {
         return (word.alias === this.props.match.params.alias)
       });
+
+      console.log("this.props", this.props);
+      console.log("keyword list", keywordList);
+      console.log("videos", videos);
+      console.log("this.state.currentVideo", this.state.currentVideo);
 
       setTimeout(() => {
         this.setVideoPlayer(videos[this.state.currentVideo]);
@@ -73,7 +83,7 @@ console.log(obj);
     player.playVideo();
 
     await this.setState({nextButton: false});
-    
+
     const timeDetector = setInterval(() => {
 
       if(player.getPlayerState()) {
@@ -87,21 +97,34 @@ console.log(obj);
         player.destroy();
         this.setState({ changed: false })
       }
-
-    }, 500)
+    }, 100)
 
   }
 
   render() {
-    let text = "There's a nuclear holocaust.\nl'm the last man on earth. Would you go out with me?";
-    console.log(this.props.keywordList[0].name);
-    let highlight = this.props.keywordList[0].id;
+    let subtitles = {
+      0: [
+        {start: 3, end: 7.2, text: "There's a nuclear holocaust.\nl'm the last man on earth."},
+        {start: 7.7, end: 13, text: "Would you go out with me?"},
+      ],
+      1: [
+        {start: 122, end: 123.631, text: "What happened?.\nJoey?"},
+        {start: 125.270, end: 126.430, text: "All right."},
+        {start: 126.705, end: 128.605, text: "We swore we would never tell."},
+        {start: 128.840, end: 132, text: "They'll never understand."},
+      ],
+    }
 
-    function getHighlightedText(text, highlight) {
-      // Split text on highlight term, include term itself into parts, ignore case
-      const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
-      return <p>{parts.map(part => part.toLowerCase() === highlight.toLowerCase() ? <span style={{ color: "red", fontSize: "3rem"}}>{part.toUpperCase()}</span> : part)}</p>;
-  }
+    let subtitlesForTheSpecificVideo = subtitles[this.state.currentVideo];
+    let text;
+    let highlight = this.props.keywordList[0].name;
+
+    subtitlesForTheSpecificVideo.map( (subtitle) => {
+      if(this.state.currentVideoTime >= subtitle.start && this.state.currentVideoTime <= subtitle.end) {
+        text = subtitle.text;
+      }       
+    })
+
     return (
       <div>
         {this.state.changed && this.state.currentVideo != 0 ? <div>loading</div> :
@@ -116,14 +139,114 @@ console.log(obj);
   }
 }
 
-// consantly get the current time of the video
-// when the current time ~ matches the time of the sentence / keyword
-// change the styling of the keyword to bold or whatever
-
-
 
 function getOffsetStart(currentVideo) {
   return Math.max(((currentVideo ? currentVideo.pivot.offset_start : 0) - 5), 0)
 }
 
+function getHighlightedText(text, highlight) {
+  if(text) {
+  const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
+  return <p>{parts.map(part => part.toLowerCase() === highlight.toLowerCase() ? <span style={{ color: "red", fontSize: "1.2rem"}}>{part.toUpperCase()}</span> : part)}</p>;
+  }
+}
 
+// 111
+// 00:09:31,583 --> 00:09:35,747
+// There's a nuclear holocaust.
+// l'm the last man on earth.
+
+// 112
+// 00:09:36,121 --> 00:09:38,316
+// Would you go out with me?
+
+
+// {"start_time":"00:09:31,583","end_time":"00:09:35,747","text":"There's a nuclear holocaust.\nl'm the last man on earth."},{"start_time":"00:09:36,121","end_time":"00:09:38,316","text":"Would you go out with me?"},
+
+
+// {start_time: "00:09:31,583", end_time: "00:09:35,747", text: "There's a nuclear holocaust"}
+
+
+// {currentVideo: 0, nextButton: false, changed: false, currentVideoTime: 7.145191}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 111
+// 00:09:31,583 --> 00:09:35,747
+// There's a nuclear holocaust.
+// l'm the last man on earth.
+
+// 112
+// 00:09:36,121 --> 00:09:38,316
+// Would you go out with me?
+
+// let subtitles = [
+//   {start: "150", end: "154.2" text: "There's a nuclear holocaust.\nl'm the last man on earth."},
+//   {start: "156.2", end: "160" text: "Would you go out with me?"},
+// ]
+
+
+// let subtitle = this.state.....
+// subtitle = {start_time: "00:09:31,583", end_time: "00:09:35,747", text: "There's a nuclear holocaust"}
+
+// let firstSentenceTime = offset_start-5;
+// let secondSentenceTime = firstSentenceTime + subtitle["end_time"] - subtitle["start_time"];
+
+// let subtitleModified = {
+//   firstSentenceTime: subtitle[0]["text"],
+
+//   secondSentenceTime: subtitle[1]["text"],
+// }
+
+// if(player.getCurrentTime() > firstSentence && player.getCurrentTime() < secondSentence) {
+//   text = subtitleModified["firstSentenceTime"];
+// } else if(player.getCurrentTime() > secondSentence && player.getCurrentTime() < thirdSentence) {
+//   text = subtitleModified["secondSentenceTime"];
+// }
+
+// let highlight = this.props.keywordList[0].name;
+
+// function getHighlightedText(text, highlight) {
+//   // Split text on highlight term, include term itself into parts, ignore case
+//   const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
+//   return <p>{parts.map(part => part.toLowerCase() === highlight.toLowerCase() ? <span style={{ color: "red", fontSize: "3rem"}}>{part.toUpperCase()}</span> : part)}</p>;
+// }
+
+// render(
+//   <>{getHighlightedText(text, highlight)}</>
+// )
+
+
+
+
+// {"start_time":"00:09:31,583","end_time":"00:09:35,747","text":"There's a nuclear holocaust.\nl'm the last man on earth."},{"start_time":"00:09:36,121","end_time":"00:09:38,316","text":"Would you go out with me?"},
+
+
+// {start_time: "00:09:31,583", end_time: "00:09:35,747", text: "There's a nuclear holocaust"}
+
+
+// {currentVideo: 0, nextButton: false, changed: false, currentVideoTime: 7.145191}
+
+
+// subtitles = [
+//   {start: "150", end: "154.2" text: "There's a nuclear holocaust.\nl'm the last man on earth."},
+//   {start: "156.2", end: "160" text: "Would you go out with me?"},
+// ]
