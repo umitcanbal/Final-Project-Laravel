@@ -11,62 +11,53 @@ export default class Layout extends React.Component {
     super(props);
 
     this.state = {
-      desktop: true,
-      width: window.innerWidth,
       videoPageOn: false,
       keywordList: []
     }
   }
 
   componentWillMount() {
-    fetch("api/keywords")
-      .then( (response) => { return (response.json()) } )
-      .then( (data) => {
-         this.setState( { keywordList: data } ) } )
-  
-    if(this.state.width < 900) {
-      this.setState( { desktop: false } )
-    }
+    fetch("/api/keywords")
+      .then((response) => { return (response.json()) })
+      .then((data) => {
+        this.setState({ keywordList: data })
+      })
   }
 
-  isVideoPageOn = () => {
-    if(this.state.videoPageOn === false) {
-      this.setState ( { videoPageOn: true } )
-    } else {
-      this.setState ( { videoPageOn: false } )
-    }
+  toggleVideoPageOn = () => {
+    this.setState({ videoPageOn: !this.state.videoPageOn })
   }
 
   render() {
-
-    if(this.state.desktop) {
-      return(
+    console.log('this.props', this.props)
+    if (this.props.onDesktop) {
+      return (
         <div>
           <Header />
           <div className="layout-sides">
             <LayoutLeft keywordList={this.state.keywordList} />
-            <LayoutRight keywordList={this.state.keywordList}  />
+            <LayoutRight keywordList={this.state.keywordList} />
           </div>
         </div>
       )
-    } else {
-
-      if(this.state.videoPageOn === false) {
-        return(
-          <div>
-            <Header />
-            <LayoutLeft keywordList={this.state.keywordList} isVideoPageOn={this.isVideoPageOn}/>
-          </div>
-        )
-      } else {
-
-        return(
-          <div>
-            <Header videoPageOn={this.state.videoPageOn} isVideoPageOn={this.isVideoPageOn}/>
-            <LayoutRight keywordList={this.state.keywordList}/>
-          </div>
-        )
-      }
     }
+
+    if (!this.state.videoPageOn) {
+      return (
+        <div>
+          <Header />
+          <LayoutLeft keywordList={this.state.keywordList} isVideoPageOn={this.toggleVideoPageOn} />
+        </div>
+      )
+    }
+
+    return (
+      <div>
+        <Header videoPageOn={this.state.videoPageOn} isVideoPageOn={this.toggleVideoPageOn} />
+        <LayoutRight keywordList={this.state.keywordList} />
+      </div>
+    )
+
+
   }
 }
