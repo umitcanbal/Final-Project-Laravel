@@ -13,4 +13,12 @@ class KeywordController extends Controller
     public function getTheKeywords() {
         return Keyword::all();
     }
+
+    public function getTheKeywordWithVideos($alias) {
+        $keyword = Keyword::where("alias", $alias)->get()[0];
+        $videos = $keyword->videos()->get();
+        $keyword->videos = $videos;
+
+        return $keyword;
+    }
 }
