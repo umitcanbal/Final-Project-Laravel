@@ -13,7 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/{path?}', 'welcome')
+Route::get('/{path?}', function () {
+    return view('welcome');
+})
     ->where('path', '^(?!api).*$');
 
 // Route::get("/something", "KeywordController@getTheVideos");
