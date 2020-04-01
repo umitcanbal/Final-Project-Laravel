@@ -22,13 +22,13 @@ export default class App extends React.Component {
         return (
             <Switch>
                 <Route exact path="/">
-                    <Layout leftMenu={<KeywordList keywordList={this.state.keywords} />}>
+                    <Layout leftMenu={<KeywordList />}>
                         I'm home page
                     </Layout>
                 </Route>
                 <Route exact path="/videos/:alias" render={({match}) => {
-                    return <Layout leftMenu={<KeywordList keywordList={this.state.keywords} />}>
-                        <VideoPage alias={match.params.alias} keywords={this.state.keywords} />
+                    return <Layout leftMenu={<KeywordList />}>
+                        <VideoPage alias={match.params.alias} />
                     </Layout>;
                 }}>
                 </Route>
