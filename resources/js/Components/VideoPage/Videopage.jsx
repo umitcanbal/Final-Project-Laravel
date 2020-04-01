@@ -9,7 +9,7 @@ export default class VideoPage extends React.Component {
     this.state = {
       currentVideo: 0,
       nextButton: false,
-      changed: false,
+      keyword: '',
     };
 
     this.player = null;
@@ -28,27 +28,30 @@ export default class VideoPage extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.alias !== prevProps.alias) {
-      this.setState({ currentVideo: 0, changed: true }, this.startVideo);
+      this.setState({ currentVideo: 0}, this.startVideo);
     }
   }
 
   startVideo = async () => {
     const { alias } = this.props;
-    const res = await fetch(`/api/videos/${alias}`);
+    const res = await fetch(`/api/keywords/${alias}`);
 
     if (!res.ok) {
         throw Error(`Could not fetch videos by alias ${alias}`);
     }
 
-    const videos = await res.json();
+    const keyword = await res.json();
 
     console.log("this.props", this.props);
-    console.log("videos", videos);
+    console.log("keyword", keyword);
     console.log("this.state.currentVideo", this.state.currentVideo);
 
     setTimeout(() => {
-      this.setVideoPlayer(videos[this.state.currentVideo]);
+      this.setVideoPlayer(keyword.videos[this.state.currentVideo]);
+      this.setState({keyword: keyword.name});
     }, 700);
+
+
   };
 
   unsetVideoPlayer = () => {
@@ -111,7 +114,7 @@ export default class VideoPage extends React.Component {
 
     let subtitlesForTheSpecificVideo = subtitles[this.state.currentVideo];
     let text;
-    // const highlight = this.props.keywordList[0].name;
+    const highlight = 'would';
 
     if (subtitlesForTheSpecificVideo) {
       subtitlesForTheSpecificVideo.map((subtitle) => {
@@ -122,14 +125,11 @@ export default class VideoPage extends React.Component {
     }
 
     return (
-      <div>
-        {this.state.changed && this.state.currentVideo != 0 ? <div>loading</div> :
           <div>
             <div id='player'></div>
-            {/* <div style={{ height: "2rem" }}>{getHighlightedText(text, highlight)}</div> */}
+            <div style={{ height: "2rem" }}>{getHighlightedText(text, highlight)}</div>
             <button onClick={this.nextVideo}>Next</button>
-          </div>}
-      </div>
+          </div>
     )
   }
 }
