@@ -1,6 +1,6 @@
 import React from "react";
-import "./videopage.css"
-
+import "./videopage.css";
+import "../../videoPlayer.js";
 
 export default class VideoPage extends React.Component {
   constructor(props) {

@@ -16,6 +16,5 @@
 
     <div id="app"></div>
     <script src="{{ mix('js/app.js') }}"></script>
-    <script src="/js/youtubePlayerScript.js"></script>
 </body>
 </html>
