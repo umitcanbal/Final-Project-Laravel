@@ -111,7 +111,7 @@ export default class VideoPage extends React.Component {
 
     let subtitlesForTheSpecificVideo = subtitles[this.state.currentVideo];
     let text;
-    const highlight = this.props.keywordList[0].name;
+    // const highlight = this.props.keywordList[0].name;
 
     if (subtitlesForTheSpecificVideo) {
       subtitlesForTheSpecificVideo.map((subtitle) => {
@@ -126,7 +126,7 @@ export default class VideoPage extends React.Component {
         {this.state.changed && this.state.currentVideo != 0 ? <div>loading</div> :
           <div>
             <div id='player'></div>
-            <div style={{ height: "2rem" }}>{getHighlightedText(text, highlight)}</div>
+            {/* <div style={{ height: "2rem" }}>{getHighlightedText(text, highlight)}</div> */}
             <button onClick={this.nextVideo}>Next</button>
           </div>}
       </div>
