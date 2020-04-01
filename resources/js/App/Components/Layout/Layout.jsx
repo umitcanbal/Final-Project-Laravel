@@ -16,7 +16,7 @@ export default class Layout extends React.Component {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     fetch("/api/keywords")
       .then((response) => { return (response.json()) })
       .then((data) => {
@@ -30,6 +30,7 @@ export default class Layout extends React.Component {
 
   render() {
     console.log('this.props', this.props)
+    console.log('this.state', this.state)
     if (this.props.onDesktop) {
       return (
         <div>

@@ -20,6 +20,10 @@ export default class VideoPage extends React.Component {
     if (this.props.keywordList.length) this.startVideo()
   }
 
+  componentWillUnmount() {
+    this.unsetVideoPlayer()
+  }
+
   componentDidUpdate(prevProps) {
     if (this.props.match.params.alias !== prevProps.match.params.alias) {
       this.setState({ currentVideo: 0, changed: true }, this.startVideo);
@@ -63,6 +67,7 @@ export default class VideoPage extends React.Component {
     const offsetFinish = offsetStart + 10
 
     const parameters = {
+      controls: 0,
       cc_load_policy: 1,
       cc_lang_pref: 'en',
       start: offsetStart,
@@ -109,7 +114,7 @@ export default class VideoPage extends React.Component {
           text = subtitle.text;
         }
       })
-    }
+    }    
 
     return (
       <div>
@@ -136,7 +141,7 @@ function getHighlightedText(text, highlight) {
 
 }
 
-table columns => keyword / subtitles
+// ************table columns => keyword / subtitles*******************
 
 
 

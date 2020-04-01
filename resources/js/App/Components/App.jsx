@@ -14,7 +14,7 @@ export default class App extends React.Component {
     componentDidMount() {
         if (window.innerWidth < 900) {
             this.setState({ onDesktop: false })
-          }
+        }
     }
 
     render() {
