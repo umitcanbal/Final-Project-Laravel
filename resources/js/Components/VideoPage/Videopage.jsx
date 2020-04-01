@@ -11,67 +11,63 @@ export default class VideoPage extends React.Component {
       nextButton: false,
       changed: false,
     }
+
+    this.player = null;
+    this.timeDetectorInterval = null;
   }
 
-  async componentDidMount() {
-//     let exampleJSON = '{"start_time":"00:09:31,583","end_time":"00:09:35,747","text":"There's a nuclear holocaust.\nl'm the last man on earth."}';
-
-// let exampleDecoded = JSON.parse(exampleJSON);
-// console.log(JSON.parse('{ "start_time":"00:09:31,583", "end_time":"00:09:35,747", "text":"There\'s a nuclear holocaust"}'));,
-    // var obj = JSON.parse('{"start_time":"00:09:31,583","end_time":"00:09:35,747","text":"There\'s a nuclear holocaust.\nl\'m the last man on earth."}');
-    // console.log(obj);
-
-
-
-    const { keywordList, alias } = this.props;
-    const { videos } = await keywordList.find((word) => {
-      return (word.alias === alias)
-    });
-    this.setVideoPlayer(videos[this.state.currentVideo])
-
-
+  componentDidMount() {
+    if (this.props.keywordList.length) this.startVideo()
   }
 
-  async componentDidUpdate(prevProps) {
+  componentWillUnmount() {
+    this.unsetVideoPlayer()
+  }
+
+  componentDidUpdate(prevProps) {
     if (this.props.alias !== prevProps.alias) {
-    await this.setState({ currentVideo: 0, changed: true });
-
-      const { keywordList, alias } = this.props;
-      const { videos } = await keywordList.find((word) => {
-        return (word.alias === alias)
-      });
-
-      console.log("this.props", this.props);
-      console.log("keyword list", keywordList);
-      console.log("videos", videos);
-      console.log("this.state.currentVideo", this.state.currentVideo);
-
-      setTimeout(() => {
-        this.setVideoPlayer(videos[this.state.currentVideo]);
-      }, 700);
+      this.setState({ currentVideo: 0, changed: true }, this.startVideo);
     }
-
   }
 
-  async nextVideo() {
-    await this.setState({ currentVideo: this.state.currentVideo + 1, nextButton: true });
+  startVideo = () => {
     const { keywordList, alias } = this.props;
-    const { videos } = await keywordList.find((word) => {
-      return (word.alias === alias)
+    const { videos } = keywordList.find((word) => {
+      return (word.alias === this.props.alias)
     });
+
+    console.log("this.props", this.props);
+    console.log("keyword list", keywordList);
+    console.log("videos", videos);
+    console.log("this.state.currentVideo", this.state.currentVideo);
 
     setTimeout(() => {
       this.setVideoPlayer(videos[this.state.currentVideo]);
-    }, 500);
+    }, 700);
+  }
+
+  unsetVideoPlayer = () => {
+    clearInterval(this.timeDetectorInterval);
+    if (this.player) {
+      this.player.destroy()
+      this.player = null
+    }
+  }
+
+  nextVideo = () => {
+    this.setState({ currentVideo: this.state.currentVideo + 1, nextButton: true }, this.startVideo);
   }
 
   setVideoPlayer = async (currentVideo) => {
+    this.unsetVideoPlayer()
+
     const url = currentVideo ? currentVideo.URL : ""
 
     const offsetStart = getOffsetStart(currentVideo)
     const offsetFinish = offsetStart + 10
 
     const parameters = {
+      controls: 0,
       cc_load_policy: 1,
       cc_lang_pref: 'en',
       start: offsetStart,
@@ -79,60 +75,54 @@ export default class VideoPage extends React.Component {
       rel: 0,
     }
 
-    player = await window.getYoutubePlayer(url, parameters);
-    player.playVideo();
+    this.player = await window.getYoutubePlayer(url, parameters);
+    this.player.playVideo();
 
-    await this.setState({nextButton: false});
+    this.setState({ nextButton: false });
 
-    const timeDetector = setInterval(() => {
-
-      if(player.getPlayerState()) {
+    this.timeDetectorInterval = setInterval(() => {
+      if (this.player.getPlayerState()) {
         this.setState({
           currentVideoTime: player.getCurrentTime(),
         })
-      }
-
-      if(this.state.nextButton || this.state.changed) {
-        clearInterval(timeDetector);
-        player.destroy();
-        this.setState({ changed: false })
       }
     }, 100)
 
   }
 
   render() {
-    let subtitles = {
+    const subtitles = {
       0: [
-        {start: 3, end: 7.2, text: "There's a nuclear holocaust.\nl'm the last man on earth."},
-        {start: 7.7, end: 13, text: "Would you go out with me?"},
+        { start: 3, end: 7.2, text: "There's a nuclear holocaust.\nl'm the last man on earth." },
+        { start: 7.7, end: 13, text: "Would you go out with me?" },
       ],
       1: [
-        {start: 122, end: 123.631, text: "What happened?.\nJoey?"},
-        {start: 125.270, end: 126.430, text: "All right."},
-        {start: 126.705, end: 128.605, text: "We swore we would never tell."},
-        {start: 128.840, end: 132, text: "They'll never understand."},
+        { start: 122, end: 123.631, text: "What happened?.\nJoey?" },
+        { start: 125.270, end: 126.430, text: "All right." },
+        { start: 126.705, end: 128.605, text: "We swore we would never tell." },
+        { start: 128.840, end: 132, text: "They'll never understand." },
       ],
     }
 
     let subtitlesForTheSpecificVideo = subtitles[this.state.currentVideo];
     let text;
-    let highlight = this.props.keywordList[0].name;
+    const highlight = this.props.keywordList[0].name;
 
-    subtitlesForTheSpecificVideo.map( (subtitle) => {
-      if(this.state.currentVideoTime >= subtitle.start && this.state.currentVideoTime <= subtitle.end) {
-        text = subtitle.text;
-      }
-    })
+    if (subtitlesForTheSpecificVideo) {
+      subtitlesForTheSpecificVideo.map((subtitle) => {
+        if (this.state.currentVideoTime >= subtitle.start && this.state.currentVideoTime <= subtitle.end) {
+          text = subtitle.text;
+        }
+      })
+    }
 
     return (
       <div>
         {this.state.changed && this.state.currentVideo != 0 ? <div>loading</div> :
           <div>
             <div id='player'></div>
-            <>{getHighlightedText(text, highlight)}</>
-            <button onClick={this.nextVideo.bind(this)}>Next</button>
-            <p style={{ fontWeight: 'bold' }}>My Text</p>
+            <div style={{ height: "2rem" }}>{getHighlightedText(text, highlight)}</div>
+            <button onClick={this.nextVideo}>Next</button>
           </div>}
       </div>
     )
@@ -145,11 +135,18 @@ function getOffsetStart(currentVideo) {
 }
 
 function getHighlightedText(text, highlight) {
-  if(text) {
+  if (!text) return
   const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
-  return <p>{parts.map(part => part.toLowerCase() === highlight.toLowerCase() ? <span style={{ color: "red", fontSize: "1.2rem"}}>{part.toUpperCase()}</span> : part)}</p>;
-  }
+  return <p style={{ margin: "0" }}>{parts.map((part, index) => part.toLowerCase() === highlight.toLowerCase() ? <span key={`sub-${index}`} style={{ color: "red", fontSize: "1.2rem" }}>{part.toUpperCase()}</span> : part)}</p>;
+
 }
+
+// ************table columns => keyword / subtitles*******************
+
+
+
+
+
 
 // 111
 // 00:09:31,583 --> 00:09:35,747
