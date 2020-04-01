@@ -1,0 +1,58 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Deploy
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build-server:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    # Runs a set of commands using the runners shell
+    - name: Set up environment
+      run: |
+        echo "APP_NAME=Laravel" > .env
+        echo "APP_ENV=local" >> .env
+        echo "APP_KEY=" >> .env
+        echo "APP_DEBUG=false" >> .env
+        echo "APP_URL=http://english-with-friends.fun" >> .env
+        echo "DB_CONNECTION=mysql" >> .env
+        echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
+        echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
+        echo "DB_DATABASE=${{ secrets.DB_NAME }}" >> .env
+        echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
+        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+    - name: Install Dependencies
+      run: |
+        composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+        php artisan key:generate
+        npm ci
+    - name: Build client side
+      run: npm run prod
+    - name: Zip it
+      run: |
+        mkdir dist
+        mkdir dist/public
+        mv install.php dist/public/install.php
+        zip -r dist/release.zip . -x dist/\* node_modules/\* .git/\*
+    - name: Upload zip to server
+      uses: sebastianpopp/ftp-action@releases/v2
+      with:
+        host: ${{ secrets.FTP_HOST }}
+        user: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        localDir: "dist"
+    - name: Trigger installation
+      run: wget -qO- http://english-with-friends.fun/install.php

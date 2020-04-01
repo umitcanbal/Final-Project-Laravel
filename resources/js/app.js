@@ -4,7 +4,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom"
 
-import App from "./App/Components/App.jsx";
+import App from "./Components/App/App.jsx";
 
 
 ReactDOM.render(

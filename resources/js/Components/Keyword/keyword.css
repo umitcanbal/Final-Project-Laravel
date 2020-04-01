@@ -1,0 +1,31 @@
+.keyword {
+  margin: 0;
+  padding: 0 40px;
+  line-height: 60px;
+  border-top: 1px var(--border-color) solid;
+  height: 60px;
+  text-decoration: none;
+  color: var(--text-color);
+  display: block;
+  transition: background-color 0.2s linear;
+}
+
+.keyword:last-of-type {
+  border-bottom: 1px var(--border-color) solid;
+}
+
+.keyword:hover {
+  background-color: var(--list-hover);
+}
+
+.keyword:active {
+  background-color: var(--friends-yellow);
+}
+
+.keyword__selected {
+  background-color: var(--friends-red);
+}
+
+.keyword__selected:hover {
+  background-color: var(--list-selected-hover);
+}

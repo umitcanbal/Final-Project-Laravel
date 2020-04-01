@@ -1,6 +1,6 @@
 import React from "react";
-import "./videopage.css"
-
+import "./videopage.css";
+import "../../videoPlayer.js";
 
 export default class VideoPage extends React.Component {
   constructor(props) {
@@ -10,14 +10,16 @@ export default class VideoPage extends React.Component {
       currentVideo: 0,
       nextButton: false,
       changed: false,
-    }
+    };
 
-    this.player = null
-    this.timeDetectorInterval = null
+    this.player = null;
+    this.timeDetectorInterval = null;
   }
 
   componentDidMount() {
-    if (this.props.keywordList.length) this.startVideo()
+    if (this.props.alias) {
+        this.startVideo();
+    }
   }
 
   componentWillUnmount() {
@@ -25,26 +27,29 @@ export default class VideoPage extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.match.params.alias !== prevProps.match.params.alias) {
+    if (this.props.alias !== prevProps.alias) {
       this.setState({ currentVideo: 0, changed: true }, this.startVideo);
     }
   }
 
-  startVideo = () => {
-    const { keywordList } = this.props;
-    const { videos } = keywordList.find((word) => {
-      return (word.alias === this.props.match.params.alias)
-    });
+  startVideo = async () => {
+    const { alias } = this.props;
+    const res = await fetch(`/api/videos/${alias}`);
+
+    if (!res.ok) {
+        throw Error(`Could not fetch videos by alias ${alias}`);
+    }
+
+    const videos = await res.json();
 
     console.log("this.props", this.props);
-    console.log("keyword list", keywordList);
     console.log("videos", videos);
     console.log("this.state.currentVideo", this.state.currentVideo);
 
     setTimeout(() => {
       this.setVideoPlayer(videos[this.state.currentVideo]);
     }, 700);
-  }
+  };
 
   unsetVideoPlayer = () => {
     clearInterval(this.timeDetectorInterval);
@@ -52,19 +57,19 @@ export default class VideoPage extends React.Component {
       this.player.destroy()
       this.player = null
     }
-  }
+  };
 
   nextVideo = () => {
     this.setState({ currentVideo: this.state.currentVideo + 1, nextButton: true }, this.startVideo);
-  }
+  };
 
   setVideoPlayer = async (currentVideo) => {
-    this.unsetVideoPlayer()
+    this.unsetVideoPlayer();
 
-    const url = currentVideo ? currentVideo.URL : ""
+    const url = currentVideo ? currentVideo.URL : "";
 
-    const offsetStart = getOffsetStart(currentVideo)
-    const offsetFinish = offsetStart + 10
+    const offsetStart = getOffsetStart(currentVideo);
+    const offsetFinish = offsetStart + 10;
 
     const parameters = {
       controls: 0,
@@ -73,7 +78,7 @@ export default class VideoPage extends React.Component {
       start: offsetStart,
       end: offsetFinish,
       rel: 0,
-    }
+    };
 
     this.player = await window.getYoutubePlayer(url, parameters);
     this.player.playVideo();
@@ -88,7 +93,7 @@ export default class VideoPage extends React.Component {
       }
     }, 100)
 
-  }
+  };
 
   render() {
     const subtitles = {
@@ -102,11 +107,11 @@ export default class VideoPage extends React.Component {
         { start: 126.705, end: 128.605, text: "We swore we would never tell." },
         { start: 128.840, end: 132, text: "They'll never understand." },
       ],
-    }
+    };
 
     let subtitlesForTheSpecificVideo = subtitles[this.state.currentVideo];
     let text;
-    const highlight = this.props.keywordList[0].name;
+    // const highlight = this.props.keywordList[0].name;
 
     if (subtitlesForTheSpecificVideo) {
       subtitlesForTheSpecificVideo.map((subtitle) => {
@@ -114,14 +119,14 @@ export default class VideoPage extends React.Component {
           text = subtitle.text;
         }
       })
-    }    
+    }
 
     return (
       <div>
         {this.state.changed && this.state.currentVideo != 0 ? <div>loading</div> :
           <div>
             <div id='player'></div>
-            <div style={{ height: "2rem" }}>{getHighlightedText(text, highlight)}</div>
+            {/* <div style={{ height: "2rem" }}>{getHighlightedText(text, highlight)}</div> */}
             <button onClick={this.nextVideo}>Next</button>
           </div>}
       </div>

@@ -1,6 +1,8 @@
 /node_modules
 /public/hot
 /public/storage
+/public/fonts
+/public/images
 /storage/*.key
 /vendor
 .env
@@ -13,3 +15,5 @@ yarn-error.log
 /public/js  
 /public/css
 
+.DS_Store
+/public/mix-manifest.json
