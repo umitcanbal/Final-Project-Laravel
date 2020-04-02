@@ -39,8 +39,10 @@ export default class VideoPage extends React.Component {
     if (!res.ok) {
         throw Error(`Could not fetch videos by alias ${alias}`);
     }
-
+    
     const keyword = await res.json();
+
+    if(this.state.currentVideo === keyword.videos.length) this.setState({currentVideo: 0});
 
     setTimeout(() => {
       this.setVideoPlayer(keyword.videos[this.state.currentVideo]);
@@ -88,40 +90,12 @@ export default class VideoPage extends React.Component {
         this.setState({
           currentVideoTime: player.getCurrentTime(),
         })
-        console.log("current time of the video", player.getCurrentTime())
       }
     }, 100)
 
   };
 
   render() {
-    // const subtitles = {
-    //   0: [
-    //     { start: 3, end: 7.2, text: "There's a nuclear holocaust.\nl'm the last man on earth." },
-    //     { start: 7.7, end: 13, text: "Would you go out with me?" },
-    //   ],
-    //   1: [
-    //     { start: 122, end: 123.631, text: "What happened Joey?" },
-    //     { start: 125.0, end: 126.430, text: "All right." },
-    //     { start: 126.705, end: 128.605, text: "We swore we would never tell." },
-    //     { start: 128.640, end: 132, text: "They'll never understand." },
-    //   ],
-    //   2: [
-    //     { start: 230, end: 233.18, text: "She's my friend and she needed help." },
-    //     { start: 233.520, end: 239, text: "lf l had to, l would pee on anyone of you." },
-    //   ],
-    //   3: [
-    //     { start: 30, end: 32.93, text: "You should give yourself credit." },
-    //     { start: 33.741, end: 37.268, text: "My mom never thought this would never work out." },
-    //     { start: 38.229, end: 41.0, text: "She said, ''Once a cheater, always a cheater.''" },
-    //   ],
-    //   4: [
-    //     { start: 154.3, end: 157.163, text: "You know, if we were a couple, we could play this game naked." },
-    //     { start: 158.071, end: 160.071, text: "Would you stop?" },
-    //     { start: 160.205, end: 161.666, text: "Okay. All right." },
-    //     { start: 162.441, end: 163.820, text: "Okay. All right." },
-    //   ],
-    // };
 
     const subtitles = {
       "would": {
