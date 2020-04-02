@@ -22,20 +22,35 @@
 .layout__left,
 .layout__right {
   width: 100vw;
+  overflow: hidden;
+}
+
+.layout__right {
+  background-image: url('./friends_logo.png');
+  background-repeat: no-repeat;
+  background-position: bottom center;
 }
 
 @media (min-width: 900px) {
   .layout__content {
     width: 100vw;
     transform: translateX(0);
+    transition: none;
   }
 
   .layout__left {
     width: 400px;
+    border-right: 1px var(--border-color) solid;
   }
 
   .layout__right {
     width: auto;
     flex-grow: 1;
+
+  }
+}
+@media (max-height: 670px) and (min-width: 900px) {
+  .layout__right {
+    background-image: none;
   }
 }

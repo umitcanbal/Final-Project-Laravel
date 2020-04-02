@@ -206,10 +206,11 @@ export default class VideoPage extends React.Component {
     }
 
     return (
-          <div>
+          <div className="videopage">
+            <h1> {highlight ? `Friends: "${highlight}"` : 'Loading...'} </h1>
             <div id='player'></div>
             <div style={{ height: "2rem" }}>{getHighlightedText(text, highlight)}</div>
-            <button onClick={this.nextVideo}>Next</button>
+            <button className="nextbtn" onClick={this.nextVideo}>Next</button>
           </div>
     )
   }

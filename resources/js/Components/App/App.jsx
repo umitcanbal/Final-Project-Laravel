@@ -3,6 +3,7 @@ import './app.css';
 import Layout from "../Layout/Layout.jsx";
 import KeywordList from '../KeywordList/KeywordList.jsx';
 import VideoPage from '../VideoPage/Videopage';
+import Intro from '../Introduction/Intro.jsx';
 import {Switch, Route} from 'react-router-dom';
 
 export default class App extends React.Component {
@@ -23,7 +24,7 @@ export default class App extends React.Component {
             <Switch>
                 <Route exact path="/">
                     <Layout leftMenu={<KeywordList />}>
-                        I'm home page
+                        <Intro />
                     </Layout>
                 </Route>
                 <Route exact path="/videos/:alias" render={({match}) => {
